@@ -1,22 +1,13 @@
 import { useEffect, useState } from 'react';
 import { loadModules } from 'esri-loader';
-import axios from 'axios';
-import { render } from '@testing-library/react';
 
-const instance = axios.create({
-    baseURL: 'https://api.github.com/',
-    headers: {
-        'Content-Type': 'application/vnd.github.VERSION+json'
-    },
-    timeout: 5000,
-});
 const Buildings = (props) => {
     const [graphic, setGraphic] = useState([]);
     useEffect(() => {
         loadModules([ "esri/Graphic", "esri/geometry/Mesh", "esri/layers/GraphicsLayer", "esri/geometry/Point", "esri/symbols/PointSymbol3D", "esri/symbols/ObjectSymbol3DLayer"]).then(([Graphic, Mesh, GraphicsLayer, Point, PointSymbol3D, ObjectSymbol3DLayer]) => {
             const location = new Point({
-                longitude: props.pos.lng,
-                latitude: props.pos.lat
+                longitude: props.pos.x,
+                latitude: props.pos.y
             });
 
             Mesh.createFromGLTF(location, "https://developers.arcgis.com/javascript/latest/sample-code/import-gltf/live/tent.glb")
@@ -46,7 +37,7 @@ const Buildings = (props) => {
         return function cleanup() {
             props.view.graphics.remove(graphic);
         };
-    }, [props.deg, props.scale, props.offset]);
+    });
 
     return null;
 }
